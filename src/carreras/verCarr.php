@@ -44,16 +44,17 @@
                  on cur.id_materia = m.id_materia
                  WHERE m.id_carrera=".$_GET['idCarr'] .
                  " order by m.anio_materia, m.nombre_materia;");
-                 
+                
                 $antAnio=0;
                 $tableOpen=false;
+                echo "<h2>Lista de materias</h2>";
                  foreach ($materias as $row) {
-                    if($row["anio_materia"]!=$antFac){
+                    if($row["anio_materia"]!=$antAnio){
                         if($tableOpen){
                             echo "</table>";
                             $tableOpen=false;
                         }
-                        echo "<h2> Materias del ".$row["anio_materia"]."º año</h2>";
+                        echo "<h3> Materias del ".$row["anio_materia"]."º año</h3>";
                         echo "<table>
                         <tr>
                           <th>Materia</th>
@@ -64,7 +65,7 @@
                           <th>Modificar</th>
                           <th>Eliminar</th>
                         </tr>";
-                        $antFac=$row["anio_materia"];
+                        $antAnio=$row["anio_materia"];
                     } 
                     $verSt='../materias/verMat.php?idCarr='.$row["id_carrera"];
                     $editarSt='../materias/modifMat.php?idCarr='.$row["id_carrera"];
@@ -83,8 +84,37 @@
                     $tableOpen=false;
                 }
                      
-                 $mysqli->close();
                  echo '<a href="./agregarMat.php">Agregar Materia</a>';
+
+                 $alumnos=$mysqli->query("SELECT al.id_alumno, al.id_carrera, al.nombres_alumno, al.apellidos_alumno, al.DNI_alumno
+                 FROM alumnos al
+                 WHERE al.id_carrera=".$_GET['idCarr'] .
+                 " order by al.apellidos_alumno, al.nombres_alumno;");
+                 
+                echo "<h2>Listado de alumnos</h2>";
+
+                 echo "<table>
+                 <tr>
+                   <th>Apellido</th>
+                   <th>Nombre</th>
+                   <th>DNI</th>
+                   <th>Ver</th>
+                   <th>Modificar</th>
+                   <th>Eliminar</th>
+                 </tr>";
+
+                 foreach ($alumnos as $row) {
+                    $verSt='../alumnos/verAlumn.php?idCarr='.$row["id_carrera"];
+                    $editarSt='../alumnos/modifAlumn.php?idCarr='.$row["id_carrera"];
+                    $eliminarSt='../alumnos/elimAlumn.php?idCarr='.$row["id_carrera"];
+                     echo "<tr><td>".$row["apellidos_alumno"]."</td>"
+                     . "<td>".$row["nombres_alumno"]."</td>"
+                     . "<td>".$row["DNI_alumno"]."</td>"
+                     . "<td><a href=".$verSt.">Ver</a></td>"
+                     . "<td><a href=".$editarSt.">Editar</a></td>"
+                     . "<td><a href=".$eliminarSt.">Eliminar</a></td></tr>";
+                 }
+                 $mysqli->close();
 
              ?>
 

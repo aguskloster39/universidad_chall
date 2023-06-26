@@ -15,7 +15,7 @@
                 <li><a href="../alumnos/alumnos.php">Alumnos</a></li>
             </menu>
         </nav>
-        <form action="postMateriaAdd.php" method="post">
+        <form action="postMateria.php" method="post">
             <h2>Agregar nueva materia</h2>
             <fieldset>
                 <legend>Datos de materia:</legend>
