@@ -31,7 +31,7 @@
                  $dataCarrera=$mysqli->query("SELECT nombre_carrera FROM `carreras` WHERE id_carrera=".$_GET['idCarr']);
                  $carr=$dataCarrera->fetch_assoc();
 
-                 echo "<h1>Carrera: ".$carr['nombre_carrera'];
+                 echo "<h1>Carrera: ".$carr['nombre_carrera']."</h1>";
                  
                  
                  
