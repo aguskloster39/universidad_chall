@@ -7,7 +7,7 @@
         <header>
             <h1>Gestor universidad </h1>
         </header>
-
+     
         <nav id="nav">
             <menu>
                 <li><a href="./carreras.php">Carreras</a></li>
@@ -15,39 +15,52 @@
                 <li><a href="../alumnos/alumnos.php">Alumnos</a></li>
             </menu>
         </nav>
-        <form action="postCarreraAdd.php" method="post">
-            <h2>Agregar nueva carrera</h2>
-            <fieldset>
+        <?php
+
+            $mysqli = mysqli_init();
+            $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
+            $mysqli->real_connect("localhost", "root", "", "universidad_db");
+
+            if ($mysqli->connect_errno) {
+                echo '<script>alert("Falló la conexión a MySQL, recargar pagina")</script>';
+            }
+
+            $res=$mysqli->query("Select * from carreras where id_carrera=" . $_GET["idCarr"]);
+            $carrAct=$res->fetch_assoc();
+
+
+        echo '<form action="postCarreraMod.php" method="post">';
+        echo '<input id="idCarrera" name="idCarrera" type="hidden" value='.$_GET["idCarr"]. '>';
+        echo    '<h2>Modificar carrera: ' . $carrAct['nombre_carrera'] .   '</h2>';
+        echo    '<fieldset>
                 <legend>Datos de la carrera:</legend>
+            <div>';
+        echo       "<label for='nombreCarr'>Nombre de la carrera:</label>";
+                
+        echo        '<input id="nombreCarr" type="text" name="nombreCarr" value="' .$carrAct['nombre_carrera'] . '"/>';
+        echo    '</div>
             <div>
-                <label for="nombreCarr">Nombre de la carrera:</label>
-                <input id="nombreCarr" type="text" name="nombreCarr"/>
-            </div>
+                <label for="descripCarr">Breve descripcion:</label>';
+        echo      '<input id="descripCarr" type="text" name="descripCarr" value="' .$carrAct['descripcion_carrera'] . '"/>';
+        echo    '</div>
             <div>
-                <label for="descripCarr">Breve descripcion:</label>
-                <input id="descripCarr" type="text" name="descripCarr"/>
-            </div>
-            <div>
-                <label for="duracionCarr">Años de duracion:</label>
-                <input id="duracionCarr" type="number" name="duracionCarr"/>
-            </div>
+                <label for="duracionCarr">Años de duracion:</label>';
+        echo    '<input id="duracionCarr" type="number" name="duracionCarr" value="' .$carrAct['duracion_carrera'] . '"/>';
+        echo   '</div>
                 
             <div >
-                <label for="facultades">Facultad:</label>
+                <label for="facultades">Facultad:</label>';
 
-                <select id="facultades" name="facultCarr">
-                    <?php
-                        $mysqli = mysqli_init();
-                        $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
-                        $mysqli->real_connect("localhost", "root", "", "universidad_db");
-                        
-                        if ($mysqli->connect_errno) {
-                            echo '<script>alert("Falló la conexión a MySQL, recargar pagina")</script>';
-                        }
+        echo    '<select id="facultades" name="facultCarr">';
+               
                         
                         $facultades=$mysqli->query("Select * from facultades");
                         foreach ($facultades as $row) {
-                            echo "<option value=" . $row['id_facultad'] . ">" . $row['nombre_facultad'] . "</option>";
+                            if($row['id_facultad']  == $carrAct['id_facultad']){
+                                echo "<option value=" . $row['id_facultad'] . " selected>" . $row['nombre_facultad'] . "</option>";
+                            } else {
+                                echo "<option value=" . $row['id_facultad'] . ">" . $row['nombre_facultad'] . "</option>";
+                            }
                         }
                             
                         $mysqli->close();

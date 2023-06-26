@@ -27,44 +27,51 @@
                  if ($mysqli->connect_errno) {
                      echo '<script>alert("Falló la conexión a MySQL, recargar pagina")</script>';
                  }
+
+                 $dataCarrera=$mysqli->query("SELECT nombre_carrera FROM `carreras` WHERE id_carrera=".$_GET['idCarr']);
+                 $carr=$dataCarrera->fetch_assoc();
+
+                 echo "<h1>Carrera: ".$carr['nombre_carrera'];
                  
-                 $carreras=$mysqli->query("SELECT c.id_carrera, c.nombre_carrera, c.descripcion_carrera, c.duracion_carrera, ifNull(a.cantidad,0) as inscriptos, f.nombre_facultad
-                 FROM `carreras` c
-                 left join `facultades` f
-                 on f.id_facultad=c.id_facultad
-                 left join (select IFNULL(COUNT(*), 0) as cantidad, id_carrera
-                 from `alumnos` 
-                 GROUP by id_carrera
-                 ) a
-                 on a.id_carrera = c.id_carrera
-                 order by f.nombre_facultad, c.nombre_carrera;");
-                $antFac="";
+                 
+                 
+                 $materias=$mysqli->query("SELECT m.id_carrera, m.nombre_materia, m.horas_materia, m.aprobacion_materia, m.anio_materia, ifNull(cur.cantidad,0) as inscriptos
+                 FROM `materias` m
+                 left join (select IFNULL(COUNT(*), 0) as cantidad, id_materia
+                 from `cursadas` 
+                 GROUP by id_materia
+                 ) cur
+                 on cur.id_materia = m.id_materia
+                 WHERE m.id_carrera=".$_GET['idCarr'] .
+                 " order by m.anio_materia, m.nombre_materia;");
+                 
+                $antAnio=0;
                 $tableOpen=false;
-                 foreach ($carreras as $row) {
-                    if($row["nombre_facultad"]!=$antFac){
+                 foreach ($materias as $row) {
+                    if($row["anio_materia"]!=$antFac){
                         if($tableOpen){
                             echo "</table>";
                             $tableOpen=false;
                         }
-                        echo "<h2>".$row["nombre_facultad"]."</h2>";
+                        echo "<h2> Materias del ".$row["anio_materia"]."º año</h2>";
                         echo "<table>
                         <tr>
-                          <th>Carrera</th>
-                          <th>Descripcion</th>
-                          <th>Duracion (años)</th>
+                          <th>Materia</th>
+                          <th>Horas</th>
+                          <th>Forma de Aprobacion</th>
                           <th>Inscriptos</th>
                           <th>Ver</th>
                           <th>Modificar</th>
                           <th>Eliminar</th>
                         </tr>";
-                        $antFac=$row["nombre_facultad"];
+                        $antFac=$row["anio_materia"];
                     } 
-                    $verSt='./verCarr.php?idCarr='.$row["id_carrera"];
-                    $editarSt='./modifCarr.php?idCarr='.$row["id_carrera"];
-                    $eliminarSt='./elimCarr.php?idCarr='.$row["id_carrera"];
-                     echo "<tr><td>".$row["nombre_carrera"]."</td>"
-                     . "<td>".$row["descripcion_carrera"]."</td>"
-                     . "<td>".$row["duracion_carrera"]."</td>"
+                    $verSt='../materias/verMat.php?idCarr='.$row["id_carrera"];
+                    $editarSt='../materias/modifMat.php?idCarr='.$row["id_carrera"];
+                    $eliminarSt='../materias/elimMat.php?idCarr='.$row["id_carrera"];
+                     echo "<tr><td>".$row["nombre_materia"]."</td>"
+                     . "<td>".$row["horas_materia"]."</td>"
+                     . "<td>".$row["aprobacion_materia"]."</td>"
                      . "<td>".$row["inscriptos"]."</td>"
                      . "<td><a href=".$verSt.">Ver</a></td>"
                      . "<td><a href=".$editarSt.">Editar</a></td>"
@@ -77,7 +84,7 @@
                 }
                      
                  $mysqli->close();
-                 echo '<a href="./agregarCarr.php">Agregar Carrera</a>'
+                 echo '<a href="./agregarMat.php">Agregar Materia</a>';
 
              ?>
 
