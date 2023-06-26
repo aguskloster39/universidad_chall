@@ -16,35 +16,43 @@
             </menu>
         </nav>
         <form action="postAlumn.php" method="post">
-            <h2>Agregar nuevo alumno</h2>
+
+        <?php
+            $mysqli = mysqli_init();
+            $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
+            $mysqli->real_connect("localhost", "root", "", "universidad_db");
+
+            $res=$mysqli->query("Select * from alumnos where id_alumno=" . $_GET["idAlumn"]);
+            $alumnAct=$res->fetch_assoc();
+            echo'<h2>Agregar nuevo alumno</h2>
             <fieldset>
                 <legend>Datos personales:</legend>
             <div>
-                <label for="nombresAlumn">Nombres del alumno/a</label>
-                <input id="nombresAlumn" type="text" name="nombresAlumn"/>
-            </div>
+                <label for="nombresAlumn">Nombres del alumno/a</label>';
+               echo '<input id="nombresAlumn" type="text" name="nombresAlumn" value=\"'.$alumnAct['nombres_alumno'].'\" />';
+            echo '</div>
             <div>
-                <label for="apellidosAlumn">Apellidos:</label>
-                <input id="apellidosAlumn" type="text" name="apellidosAlumn"/>
-            </div>
+                <label for="apellidosAlumn">Apellidos:</label>';
+                echo'<input id="apellidosAlumn" type="text" name="apellidosAlumn" value=\"'.$alumnAct['apellidos_alumno'].'\" />';
+            echo'</div>
             <div>
-                <label for="dniAlumno">DNI:</label>
-                <input id="dniAlumno" type="number" name="dniAlumno"/>
-            </div>
+                <label for="dniAlumno">DNI:</label>';
+                echo '<input id="dniAlumno" type="number" name="dniAlumno" value='.$alumnAct['DNI_alumno'].'/>';
+            echo'</div>
 
             <div>
-                <label for="nacimAlumno">Fecha de Nacimiento:</label>
-                <input id="nacimAlumno" type="date" name="nacimAlumno" value="2023-06-26"/>
-            </div>
+                <label for="nacimAlumno">Fecha de Nacimiento:</label>';
+                echo '<input id="nacimAlumno" type="date" name="nacimAlumno" value=\"'.$alumnAct['nacimiento_alumno'].'\" />';
+            echo'</div>
 
             <div>
-                <label for="domicAlumno">Domicilio:</label>
-                <input id="domicAlumno" type="text" name="domicAlumno"/>
-            </div>
+                <label for="domicAlumno">Domicilio:</label>';
+                echo'<input id="domicAlumno" type="text" name="domicAlumno" value=\"'.$alumnAct['domicilio_alumno'].'\" />';
+            echo '</div>
             <div>
-                <label for="postalAlumno">Codigo postal:</label>
-                <input id="postalAlumno" type="text" name="postalAlumno"/>
-            </div>
+                <label for="postalAlumno">Codigo postal:</label>';
+                echo '<input id="postalAlumno" type="text" name="postalAlumno" value=\"'.$alumnAct['codigoPostal_alumno'].'\" />';
+            echo'</div>
 
             </fieldset>
 
@@ -52,14 +60,14 @@
                 <legend>Datos de contacto:</legend>
                 
             <div>
-                <label for="celularAlumno">Celular:</label>
-                <input id="celularAlumno" type="text" name="celularAlumno"/>
-            </div>
+                <label for="celularAlumno">Celular:</label>';
+                echo'<input id="celularAlumno" type="text" name="celularAlumno" value=\"'.$alumnAct['celular_alumno'].'\" />';
+            echo'</div>
                 
             <div>
-                <label for="mailAlumno">Mail:</label>
-                <input id="mailAlumno" type="email" name="mailAlumno"/>
-            </div>
+                <label for="mailAlumno">Mail:</label>';
+                echo'<input id="mailAlumno" type="email" name="mailAlumno" value=\"'.$alumnAct['mail_alumno'].'\" />';
+            echo'</div>
             </fieldset>
 
             <fieldset>
@@ -67,19 +75,20 @@
                 <div>
                 <label for="carrerasAlumn">Carrera:</label>
 
-                <select id="carrerasAlumn" name="carrerasAlumn">
-                    <?php
-                        $mysqli = mysqli_init();
-                        $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
-                        $mysqli->real_connect("localhost", "root", "", "universidad_db");
+                <select id="carrerasAlumn" name="carrerasAlumn">';
+
                         
                         if ($mysqli->connect_errno) {
                             echo '<script>alert("Falló la conexión a MySQL, recargar pagina")</script>';
                         }
                         
-                        $facultades=$mysqli->query("Select * from carreras");
-                        foreach ($facultades as $row) {
-                            echo "<option value=" . $row['id_carrera'] . ">" . $row['nombre_carrera'] . "</option>";
+                        $carreras=$mysqli->query("Select * from carreras");
+                        foreach ($carreras as $row) {
+                            if($row['id_carrera']  == $alumnAct['id_carrera']){
+                                echo "<option value=" . $row['id_carrera'] . " selected>" . $row['nombre_carrera'] . "</option>";
+                            } else {
+                                echo "<option value=" . $row['id_carrera'] . ">" . $row['nombre_carrera'] . "</option>";
+                            }
                         }
                             
                         $mysqli->close();

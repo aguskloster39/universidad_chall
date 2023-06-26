@@ -20,11 +20,8 @@
             <fieldset>
                 <legend>Datos de materia:</legend>
 
-            <div>
-                <label for="carrerasMat">Carrera:</label>
-
-                <select id="carrerasMat" name="carrerasMat">
-                    <?php
+            
+                <?php
                         $mysqli = mysqli_init();
                         $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
                         $mysqli->real_connect("localhost", "root", "", "universidad_db");
@@ -32,41 +29,58 @@
                         if ($mysqli->connect_errno) {
                             echo '<script>alert("Falló la conexión a MySQL, recargar pagina")</script>';
                         }
-                        
-                        $facultades=$mysqli->query("Select * from carreras");
-                        foreach ($facultades as $row) {
-                            echo "<option value=" . $row['id_carrera'] . ">" . $row['nombre_carrera'] . "</option>";
+
+                        $res=$mysqli->query("Select * from materias where id_carrera=" . $_GET["idMat"]);
+                        $matAct=$res->fetch_assoc();
+                        echo '<div>
+                            <label for="carrerasMat">Carrera:</label>';
+                        echo '<select id="carrerasMat" name="carrerasMat">';
+                        $carreras=$mysqli->query("Select * from carreras");
+                        foreach ($carreras as $row) {
+                            if($row['id_carrera']  == $matAct['id_carrera']){
+                                echo "<option value=" . $row['id_carrera'] . " selected>" . $row['nombre_carrera'] . "</option>";
+                            } else {
+                                echo "<option value=" . $row['id_carrera'] . ">" . $row['nombre_carrera'] . "</option>";
+                            }
                         }
                             
-                        $mysqli->close();
-                    ?>
-                </select>
+
+           echo     '</select>
             </div>
 
             <div>
-                <label for="nombreMat">Nombre:</label>
-                <input id="nombreMat" type="text" name="nombreMat"/>
-            </div>
+                <label for="nombreMat">Nombre:</label>';
+                echo '<input id="nombreMat" type="text" name="nombreMat" value=\"'.$matAct['nombre_materia'].'\"/>';
+            echo '</div>
 
             <div>
-                <label for="anioMat">Año:</label>
-                <input id="anioMat" type="number" name="anioMat"/>
-            </div>
+                <label for="anioMat">Año:</label>';
+                echo '<input id="anioMat" type="number" name="anioMat" value='.$matAct['anio_materia'].'/>';
+            echo '</div>
 
             <div>
-                <label for="horasMat">Horas anuales:</label>
-                <input id="horasMat" type="number" name="horasMat"/>
-            </div>
+                <label for="horasMat">Horas anuales:</label>';
+                echo '<input id="horasMat" type="number" name="horasMat" value='.$matAct['horas_materia'].'/>';
+            echo'</div>
                 
             <div>
-                <label for="aprobacionMat">Forma de aprobacion:</label>
-                    <input type="radio" id="aprobacionFinal" name="aprobacionMat" value="Final" checked/>
-                    <label for="aprobacionFinal">Final</label>
+                <label for="aprobacionMat">Forma de aprobacion:</label>';
+                if($matAct['aprobacion_materia']=='final')
+                    echo '<input type="radio" id="aprobacionFinal" name="aprobacionMat" value="Final" checked/>';
+                else 
+                    echo '<input type="radio" id="aprobacionFinal" name="aprobacionMat" value="Final"/>';
+                echo '<label for="aprobacionFinal">Final</label>';
               
-                    <input type="radio" id="aprobacionPromocion" name="aprobacionMat" value="Promocion" />
-                    <label for="aprobacionPromocion">Promocion</label>
+                if($matAct['aprobacion_materia']=='promocion')
+                    echo '<input type="radio" id="aprobacionPromocion" name="aprobacionMat" value="Promocion" checked/>';
+                else 
+                    echo '<input type="radio" id="aprobacionPromocion" name="aprobacionMat" value="Promocion"/>';
+                echo '<label for="aprobacionPromocion">Promocion</label>
                 
-            </div>
+            </div>';
+
+            $mysqli->close();
+            ?>
 
             </fieldset>
                 

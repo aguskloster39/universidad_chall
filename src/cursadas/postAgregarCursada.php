@@ -19,7 +19,7 @@
 
 <?php 
 
-$idFac=$_POST['facultCarr'];
+
 
 $mysqli = mysqli_init();
 $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);

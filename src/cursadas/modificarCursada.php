@@ -36,7 +36,8 @@
                         $mater=$dataAlumno->fetch_assoc();
        
                         echo "<h3>Notas de cursada de ".$alumn['apellidos_alumno']." ".$alumn['nombres_alumno']." de la materia ".$mater['nombre_materia']."</h3>";
-
+                        echo '<input id="idMat" name="idMat" type="hidden" value='.$_GET["idMat"]. '>';
+                        echo '<input id="idAlumn" name="idAlumn" type="hidden" value='.$_GET["idAlumn"]. '>';
                             
                         $mysqli->close();
                     ?>

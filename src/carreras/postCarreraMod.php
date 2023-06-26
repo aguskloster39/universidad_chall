@@ -41,12 +41,6 @@ if((int)$_POST['facultCarr'] < 0) {
 }
 }
 
-echo "UPDATE
-carreras set nombre_carrera=\"" . $_POST['nombreCarr'] . "\",
-descripcion_carrera=\"" . $_POST['descripCarr']  . "\",
-duracion_carrera=" . $_POST['duracionCarr'] .", 
-id_facultad=" . $idFac .
-"WHERE id_carrera=" . stripslashes($_POST['idCarrera']);
 if (!$mysqli->query("UPDATE
     carreras set nombre_carrera=\"" . $_POST['nombreCarr'] . "\",
     descripcion_carrera=\"" . $_POST['descripCarr']  . "\",

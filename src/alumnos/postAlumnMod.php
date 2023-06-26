@@ -23,12 +23,17 @@ if ($mysqli->connect_errno) {
     echo "Falló la conexión a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
 
-if (!$mysqli->query("INSERT INTO
-    alumnos (apellidos_alumno, celular_alumno, codigoPostal_alumno, DNI_alumno, domicilio_alumno, id_carrera, mail_alumno, nacimiento_alumno, nombres_alumno) VALUES 
-    (\"" . $_POST['apellidosAlumn'] . "\",\"" . $_POST['celularAlumno']  . "\",\"" 
-    . $_POST['postalAlumno']  . "\"," . $_POST['dniAlumno'] . ",\"" . $_POST['domicAlumno'] . "\","
-    . $_POST['carrerasAlumn'] . ",\"" . $_POST['mailAlumno'] . "\",\"" . $_POST['nacimAlumno'] . "\",\"" . $_POST['nombresAlumn']
-    . "\")" )  ) { 
+if (!$mysqli->query("UPDATE alumnos SET  
+    apellidos_alumno=\"" . $_POST['apellidosAlumn'] . "\",
+    celular_alumno=\"". $_POST['celularAlumno']  . "\",
+    codigoPostal_alumno=\""  . $_POST['postalAlumno']  . "\",
+    DNI_alumno=" . $_POST['dniAlumno'] . ",
+    domicilio_alumno=\"" . $_POST['domicAlumno'] . "\",
+    id_carrera=". $_POST['carrerasAlumn'] . ",
+    mail_alumno=\"" . $_POST['mailAlumno'] . "\",
+    nacimiento_alumno=\""  . $_POST['nacimAlumno'] . "\",
+    nombres_alumno=\"" . $_POST['nombresAlumn'] ."\" WHERE
+    id_alumno=" .(stipslashes)($_POST['idAlumn'] ) ) ) { 
     echo "Falló el ingreso del alumno: (" . $mysqli->errno . ") " . $mysqli->error;
 } else {
     echo "Alumno ingresado con exito!";
